@@ -48,8 +48,10 @@
                 <label for="ten">Mail upload</label> 
                 <select name="id_mail_select" class="form-control select2" id="id_mail">
                   <option value="">-- Chọn mail --</option>    
-                  @foreach($mailList as $mail)                
+                  @foreach($mailList as $mail) 
+                  @if($mail->status == 1)               
                   <option value="{{ $mail->id }}" {{ $id_mail == $mail->id ? "selected" : "" }}>{{ $mail->email }}</option>
+                  @endif
                   @endforeach                    
                 </select>
 
@@ -132,7 +134,9 @@
                             <select class="form-control {{ (isset($dataArr[$i]) && $dataArr[$i]->id_mail > 0 ) ? "da-chon"  : "chua-chon" }}" name="id_mail[]">
                               <option value="">-Chọn-</option>
                               @foreach($mailList as $mail)
+                              @if($mail->status == 1)               
                               <option value="{{ $mail->id }}">{{ $mail->email }}</option>
+                              @endif
                               @endforeach
                             </select>
                           </td>
@@ -174,7 +178,9 @@
                             <select class="form-control {{ (isset($dataArr[$i]) && $dataArr[$i]->id_mail > 0 ) ? "da-chon"  : "chua-chon" }}" name="id_mail[]">
                               <option value="">-Chọn-</option>
                               @foreach($mailList as $mail)
+                              @if($mail->status == 1)               
                               <option {{ (isset($dataArr[$i]) && $dataArr[$i]->id_mail == $mail->id ) ? "selected"  : "" }} value="{{ $mail->id }}">{{ $mail->email }}</option>
+                              @endif
                               @endforeach
                             </select>
                           </td>

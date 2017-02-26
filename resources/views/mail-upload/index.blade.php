@@ -28,7 +28,25 @@
         <div class="box-header with-border">
           <h3 class="box-title">Danh sách </h3>
         </div>
-        
+        <div class="panel panel-default">        
+        <div class="panel-body">
+          <form class="form-inline" role="form" method="GET" action="{{ route('mail-upload.index') }}">
+            <div class="form-group ">    
+                  <label for="ten">&nbsp;&nbsp;&nbsp;&nbsp;Email</label>              
+                  <input type="text" class="form-control"  style="width:200px" name="email" id="email" value="{{ $email }}">
+                </div>
+            <div class="form-group">              
+              <label for="id_chude">&nbsp;&nbsp;Trạng thái</label>
+              <select name="status" class="form-control select2" id="status">
+                <option value="">- Tất cả -</option>
+                <option value="1" {{ $status == 1 ? "selected" : "" }}>Mở</option>
+                <option value="2" {{ $status == 2 ? "selected" : "" }}>Khóa</option>
+              </select>
+            </div>        
+            <button type="submit" class="btn btn-primary">Lọc</button>
+          </form>         
+        </div>
+      </div>
         <!-- /.box-header -->
         <div class="box-body">
             
@@ -72,7 +90,11 @@
 
           </tbody>
           </table>
-           
+          @if($items->count() > 0)
+           <div style="text-align:center">
+            {{ $items->appends( ['email' => $email, 'status' => $status] )->links() }}
+          </div> 
+          @endif 
         </div>        
       </div>
       <!-- /.box -->     

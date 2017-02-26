@@ -18,7 +18,7 @@ class IsAdmin {
         {
             return $next($request);
         }
-		return redirect()->route('backend.login-form');
+		return redirect()->route('login-form');
 	}
 
 }

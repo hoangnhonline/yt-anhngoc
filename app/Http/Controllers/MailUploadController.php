@@ -21,9 +21,18 @@ class MailUploadController extends Controller
         if(Auth::user()->role != 3){
             return redirect()->route('link-video.index');
         }
-        $items = MailUpload::paginate(100);
+        $email = $request->email ? $request->email : "";
+        $status = $request->status ? $request->status : 0;
+        $query = MailUpload::whereRaw(1);
+        if($email != ''){
+            $query->where('email', 'LIKE', '%'.$email.'%');
+        }
+        if($status > 0){
+            $query->where('status', $status);   
+        }
+        $items = $query->paginate(100);
       
-        return view('mail-upload.index', compact( 'items' ));
+        return view('mail-upload.index', compact( 'items', 'email', 'status' ));
     }
     public function updateStatus(Request $request){
         $status = $request->status;
