@@ -37,9 +37,8 @@
           <table class="table table-bordered" id="table-list-data">
             <tr>
               <th style="width: 1%">#</th>              
-              <th>Họ Tên</th>
-              <th>Email</th>
-              <th>Role</th>
+              <th>Tên</th>
+              <th>Email</th>              
               <th>Trạng thái</th>
               <th width="1%" style="white-space:nowrap">Thao tác</th>
             </tr>
@@ -52,10 +51,9 @@
                   <td><span class="order">{{ $i }}</span></td>
                  
                   <td>                  
-                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->name }}</a>                                
+                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->full_name }}</a>                                
                   </td>
-                  <td>{{ $item->email }}</td>
-                  <td>{{ $item->role == 1 ? "Nhân viên"  : "Giám đốc KV" }}</td>
+                  <td>{{ $item->email }}</td>                  
                   <td>{{ $item->status == 1 ? "Mở"  : "Khóa" }}</td>
                   <td style="white-space:nowrap">  
                     <a href="{{ route( 'account.update-status', ['status' => $item->status == 1 ? 2 : 1 , 'id' => $item->id ])}}" class="btn btn-sm {{ $item->status == 1 ? "btn-warning" : "btn-info" }}" 
@@ -67,7 +65,7 @@
                     >{{ $item->status == 1 ? "Khóa TK" : "Mở khóa TK" }}</a>                
                     <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}" class="btn-sm btn btn-primary">Chỉnh sửa</a>                 
                     
-                    <a onclick="return callDelete('{{ $item->name }}','{{ route( 'account.destroy', [ 'id' => $item->id ]) }}');" class="btn-sm btn btn-danger">Xóa</a>
+                    <!--<a onclick="return callDelete('{{ $item->name }}','{{ route( 'account.destroy', [ 'id' => $item->id ]) }}');" class="btn-sm btn btn-danger">Xóa</a>-->
                     
                   </td>
                 </tr> 

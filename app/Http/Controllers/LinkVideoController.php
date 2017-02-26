@@ -22,12 +22,53 @@ class LinkVideoController extends Controller
     * @return Response
     */    
     public function index(Request $request)
-    {          
-        $items = Account::where('role', '<', 3)->where('status', '>', 0)->orderBy('id')->get();        
+    {    
+        $chudeList = ChuDe::all();
+        foreach($chudeList as $tmp){
+            $chudeNameArr[$tmp->id] = $tmp->ten;
+        }
+
+        $mailList = MailUpload::all();
+        foreach($mailList as $tmp){
+            $mailNameArr[$tmp->id] = $tmp->email;
+        }
+        $userList = Account::where('role', 1)->get();
+        foreach($userList as $tmp){
+            $userNameArr[$tmp->id] = $tmp->full_name;
+        }
+        $stt_fm = $search['stt_fm'] = $request->stt_fm ? $request->stt_fm : '';
+        $stt_to = $search['stt_to'] = $request->stt_to ? $request->stt_to : '';
+        $id_chude = $search['id_chude'] = $request->id_chude ? $request->id_chude : '';
+        $id_mail = $search['id_mail'] =  $request->id_mail ? $request->id_mail : '';
+        $items = (object) [];
+        
+        $query = LinkVideo::whereRaw('1');
+        if($id_mail > 0){
+            $query->where('id_mail', $id_mail);
+        }        
+        if($id_chude > 0){
+            $query->where('id_chude', $id_chude);
+        }
+        if($stt_fm > 0){
+            $query->where('stt','>=', $stt_fm);
+        }
+        if($stt_to > 0){
+            $query->where('stt','<=', $stt_to);
+        }
+        if(Auth::user()->role != 3){
+            $query->where('created_user', Auth::user()->id );   
+        }else{
+            $user_id = $search['user_id'] = $request->user_id ? $request->user_id : 0;
+
+            if($user_id > 0){
+                $query->where('created_user', $user_id);
+            }
+        }
+        $items = $query->paginate(100);
         
         //$parentCate = Category::where('parent_id', 0)->where('type', 1)->orderBy('display_order')->get();
         
-        return view('link-video.index', compact('items'));
+        return view('link-video.index', compact('items', 'chudeList', 'mailList', 'userList', 'search', 'mailNameArr', 'userNameArr', 'chudeNameArr'));
     }
     public function create(Request $request)
     {         
@@ -37,8 +78,24 @@ class LinkVideoController extends Controller
         $id_mail = $request->id_mail ? $request->id_mail : '';
         $buoc = $request->buoc ? $request->buoc : 1;
         $dataList = (object) [];
-        $dataList = LinkVideo::where('stt', '>=', $stt_fm)->where('stt', '<=', $stt_to)->get();
+        $query = LinkVideo::where('stt', '>=', $stt_fm)->where('stt', '<=', $stt_to);
+        if(Auth::user()->role !=3){
+            $query->where('created_user', Auth::user()->id);
+        }
+        $dataList = $query->get();
         $dataArr = [];
+        $check = true;
+        if($stt_fm > 0 && $stt_to > 0 && Auth::user()->role != 3){
+            for($i = $stt_fm; $i<=$stt_to; $i++){
+                $arr[] = $i;
+            }
+            
+            $count = LinkVideo::whereIn('stt', $arr)->where('created_user', '<>', Auth::user()->id)->count();
+
+            if($count > 0){
+                $check = false;
+            }
+        }
         if($dataList->count() > 0){
             foreach($dataList as $tmp){
                 $dataArr[$tmp->stt] = $tmp;
@@ -57,7 +114,7 @@ class LinkVideoController extends Controller
         $chudeList = ChuDe::all();
         $mailList = MailUpload::all();
         $userList = Account::where('role', 1)->get();
-        return view('link-video.create', compact('chudeList', 'userList', 'stt_fm', 'stt_to', 'id_chude', 'thuocTinhList', 'dataList','str_id_thuoctinh', 'dataArr', 'buoc', 'mailList', 'id_mail'));
+        return view('link-video.create', compact('chudeList', 'userList', 'stt_fm', 'stt_to', 'id_chude', 'thuocTinhList', 'dataList','str_id_thuoctinh', 'dataArr', 'buoc', 'mailList', 'id_mail', 'check'));
     }
 
     public function store(Request $request)
@@ -65,10 +122,10 @@ class LinkVideoController extends Controller
         $dataArr = $request->all();
         foreach($dataArr['stt'] as $key => $stt){
             $data['stt'] = $stt;
-            $data['name'] = $dataArr['ten'][$key];
+            $data['name'] = $dataArr['ten'][$key]!='' ? $dataArr['ten'][$key] : $stt ;
 
             if(isset($dataArr['notes'])){
-                $data['notes'] = $dataArr['notes'][$key];
+                $data['notes'] = $dataArr['notes'][$key] != '' ? $dataArr['notes'][$key] : $stt.".mp4" ;
             }            
             $data['id_chude'] = $dataArr['id_chude'];
             $data['created_user'] = Auth::user()->id;
@@ -120,7 +177,7 @@ class LinkVideoController extends Controller
     public function destroy($id)
     {
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
         // delete
         $model = Account::find($id);
@@ -133,7 +190,7 @@ class LinkVideoController extends Controller
     public function edit($id)
     {
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
         $detail = Account::find($id);
         $departmentList = Department::all();
@@ -143,7 +200,7 @@ class LinkVideoController extends Controller
     public function update(Request $request)
     {
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
         $dataArr = $request->all();
         

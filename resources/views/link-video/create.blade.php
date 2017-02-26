@@ -79,7 +79,10 @@
               <label>&nbsp;</label>
               <button class="btn-primary form-control" id="btnLoad" type="button">Load</button>
               </div>
-              @if($buoc > 0 && $stt_fm > 0 && $stt_to > 0)
+              @if($check == false)
+              <h3 style="color:red" class="col-md-12">Khoảng số thứ tự bạn chọn đã có account khác tạo.</h3>
+              @endif
+              @if($buoc > 0 && $stt_fm > 0 && $stt_to > 0 && $check == true)
               <div id="load-data" class="col-md-12" style="padding-left:0px;padding-right:0px">
 
                   <table class="table table-striped table-bordered" id="dataTbl">
@@ -113,7 +116,7 @@
                           <td><input type="text" class="form-control" placeholder="Tên" name="ten[]" style="width:230px"></td>
                           @if($buoc == 1)                          
                            @foreach($thuocTinhList as $thuocTinh)                         
-                          <td style="width:40px;text-align:center"><input type="checkbox" class="thuoc_tinh">
+                          <td style="width:40px;text-align:center" class="tt"><input type="checkbox" class="thuoc_tinh">
                           <input type="hidden" name="thuoctinh[{{ $thuocTinh->id}}][]" value="0" title="{{ $thuocTinh->ten }}">
                           </td>    
                             @endforeach
@@ -151,7 +154,7 @@
                          $checkedArr =  isset($dataArr[$i]) ?  explode(',', $dataArr[$i]->str_id_thuoctinh) : [];
                           ?>
                            @foreach($thuocTinhList as $thuocTinh)                         
-                          <td style="width:40px;text-align:center"><input type="checkbox" class="thuoc_tinh" {{
+                          <td style="width:40px;text-align:center" class="tt"><input type="checkbox" class="thuoc_tinh" {{
                             in_array($thuocTinh->id, $checkedArr) ? "checked" : ""
                             }} title="{{ $thuocTinh->ten }}">
                           <input type="hidden" name="thuoctinh[{{ $thuocTinh->id}}][]" value="{{
@@ -189,11 +192,13 @@
               @endif
              
             </div>
+            @if($check == true)
             <div class="box-footer">
               <button type="button" class="btn btn-default" id="btnLoading" style="display:none"><i class="fa fa-spin fa-spinner"></i></button>
               <button type="submit" class="btn btn-primary" id="btnSave">Lưu</button>
               <a class="btn btn-default" class="btn btn-primary" href="{{ route('link-video.index')}}">Hủy</a>
             </div>
+            @endif
             
         </div>
         <!-- /.box -->     
@@ -263,6 +268,11 @@ function loadView(){
     $(document).ready(function(){
       $('select.chua-chon').each(function(){
         $(this).val($('#mail_upload').val());
+      });
+      $('td.tt').click(function(){
+        
+        
+        $(this).children('input[type=checkbox]').click();
       });
       if($('#dataTbl').length == 1){
         var tableOffset = $("#dataTbl").offset().top;

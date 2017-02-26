@@ -64,7 +64,7 @@ class UserController extends Controller
             return redirect()->route('login-form');
         }
 
-        return redirect()->route('cost.index');
+        return redirect()->route('link-video.index');
     }
   
     public function logout()

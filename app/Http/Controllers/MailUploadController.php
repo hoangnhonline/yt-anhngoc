@@ -18,6 +18,9 @@ class MailUploadController extends Controller
     */
     public function index(Request $request)
     {
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        }
         $items = MailUpload::paginate(100);
       
         return view('mail-upload.index', compact( 'items' ));
@@ -30,6 +33,9 @@ class MailUploadController extends Controller
     */
     public function create(Request $request)
     {   
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        }
         return view('mail-upload.create');
     }
 
@@ -79,6 +85,9 @@ class MailUploadController extends Controller
     */
     public function edit($id)
     {   
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        }
         $detail = MailUpload::find($id);        
         return view('mail-upload.edit', compact('detail'));
     }

@@ -1,6 +1,6 @@
 <header class="main-header">
   <!-- Logo -->
-  <a href="{{ route('cost.index') }}" class="logo">
+  <a href="{{ route('link-video.index') }}" class="logo">
     <!-- mini logo for sidebar mini 50x50 pixels -->
     <span class="logo-mini"><b>YT</b></span>
     <!-- logo for regular state and mobile devices -->

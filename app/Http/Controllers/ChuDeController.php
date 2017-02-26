@@ -18,6 +18,9 @@ class ChuDeController extends Controller
     */
     public function index(Request $request)
     {
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        }
         $items = ChuDe::paginate(100);
       
         return view('chu-de.index', compact( 'items' ));
@@ -30,6 +33,9 @@ class ChuDeController extends Controller
     */
     public function create(Request $request)
     {   
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        }
         return view('chu-de.create');
     }
 
@@ -77,6 +83,9 @@ class ChuDeController extends Controller
     */
     public function edit($id)
     {   
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        }
         $detail = ChuDe::find($id);        
         return view('chu-de.edit', compact('detail'));
     }

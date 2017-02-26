@@ -32,22 +32,18 @@ class AccountController extends Controller
     public function index(Request $request)
     {          
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
-        $items = Account::where('role', '<', 3)->where('status', '>', 0)->orderBy('id')->get();        
+        $items = Account::where('role', '<', 3)->where('status', '>', 0)->orderBy('id')->get();               
         
-        //$parentCate = Category::where('parent_id', 0)->where('type', 1)->orderBy('display_order')->get();
         
         return view('account.index', compact('items'));
     }
     public function create()
     {        
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         } 
-        //$parentCate = Category::where('parent_id', 0)->where('type', 1)->orderBy('display_order')->get();
-        $departmentList = Department::all();
-        $areaList = Area::all();
         return view('account.create', compact('departmentList', 'areaList'));
     }
     public function changePass(){
@@ -82,80 +78,76 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
         $dataArr = $request->all();
          
         $this->validate($request,[
-            'name' => 'required',
+            'full_name' => 'required',
             'email' => 'required|unique:users,email',
         ],
         [
-            'name.required' => 'Bạn chưa nhập họ tên',
+            'full_name.required' => 'Bạn chưa nhập họ tên',
             'email.required' => 'Bạn chưa nhập email',
             'email.unique' => 'Email đã được sử dụng.'
         ]);       
         
         $tmpPassword = str_random(10);
 
-        $dataArr['password'] = Hash::make( $tmpPassword );
+        $dataArr['password'] = Hash::make('phanngoc@123');
         
-        $dataArr['created_user'] = Auth::user()->id;
-
-        $dataArr['updated_user'] = Auth::user()->id;
-
+        $dataArr['role'] = 1;
         $rs = Account::create($dataArr);
+        /*
         if ( $rs->id > 0 ){
-            Mail::send('account.mail', ['name' => $request->name, 'password' => $tmpPassword, 'email' => $request->email], function ($message) use ($request) {
+            Mail::send('account.mail', ['full_name' => $request->full_name, 'password' => $tmpPassword, 'email' => $request->email], function ($message) use ($request) {
                 $message->from( config('mail.username'), config('mail.name'));
 
                 $message->to( $request->email, $request->full_name )->subject('Mật khẩu đăng nhập hệ thống');
             });   
         }
-
-        Session::flash('message', 'Tạo mới tài khoản thành công. Mật khẩu đã được gửi đến email đăng ký.');
+        */
+        Session::flash('message', 'Tạo mới tài khoản thành công. Mật khẩu mặc định là : phanngoc@123');
 
         return redirect()->route('account.index');
     }
     public function destroy($id)
     {
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
         // delete
         $model = Account::find($id);
         $model->delete();
 
         // redirect
-        Session::flash('message', 'Xóa quốc gia thành công');
+        Session::flash('message', 'Xóa tài khoản thành công');
         return redirect()->route('account.index');
     }
     public function edit($id)
     {
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
-        $detail = Account::find($id);
-        $departmentList = Department::all();
-        $areaList = Area::all();
-        return view('account.edit', compact( 'detail', 'departmentList', 'areaList'));
+        $detail = Account::find($id);      
+        return view('account.edit', compact( 'detail' ));
     }
     public function update(Request $request)
     {
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
         $dataArr = $request->all();
         
         $this->validate($request,[
-            'name' => 'required'            
+            'full_name' => 'required'            
         ],
         [
-            'name.required' => 'Bạn chưa nhập họ tên'           
+            'full_name.required' => 'Bạn chưa nhập họ tên'           
         ]);      
 
         $model = Account::find($dataArr['id']);        
-
+        $dataArr['role'] = 1;
         $model->update($dataArr);
 
         Session::flash('message', 'Cập nhật tài khoản thành công');
@@ -165,12 +157,10 @@ class AccountController extends Controller
     public function updateStatus(Request $request)
     {       
         if(Auth::user()->role != 3){
-            return redirect()->route('cost.index');
+            return redirect()->route('link-video.index');
         }
-        $model = Account::find( $request->id );
-
+        $model = Account::find( $request->id );       
         
-        $model->updated_user = Auth::user()->id;
         $model->status = $request->status;
 
         $model->save();

@@ -42,24 +42,7 @@
 
   <!-- Content Wrapper. Contains page content -->
   @yield('content')
-  <div style="display: none" id="box_uploadimages">
-    <div class="upload_wrapper block_auto">
-        <div class="note" style="text-align:center;">Nhấn <strong>Ctrl</strong> để chọn nhiều hình.</div>
-        <form id="upload_files_new" method="post" enctype="multipart/form-data" enctype="multipart/form-data" action="{{ route('ck-upload')}}">
-            <fieldset style="width: 100%; margin-bottom: 10px; height: 47px; padding: 5px;">
-                <legend><b>&nbsp;&nbsp;Chọn hình từ máy tính&nbsp;&nbsp;</b></legend>
-                <input style="border-radius:2px;" type="file" id="myfile" name="myfile[]" multiple />
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <div class="clear"></div>
-                <div class="progress_upload" style="text-align: center;border: 1px solid;border-radius: 3px;position: relative;display: none;">
-                    <div class="bar_upload" style="background-color: grey;border-radius: 1px;height: 13px;width: 0%;"></div >
-                    <div class="percent_upload" style="color: #FFFFFF;left: 140px;position: absolute;top: 1px;">0%</div >
-                </div>
-            </fieldset>
-        </form>
-    </div>
-</div>
-
+ 
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
@@ -71,8 +54,7 @@
 
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
-<input type="hidden" id="route_update_order" value="{{ route('update-order') }}">
-<input type="hidden" id="route_get_slug" value="{{ route('get-slug') }}">
+
   <div class="control-sidebar-bg"></div>
 </div>
 <input type="hidden" id="upload_url" value="{{ config('icho.upload_url') }}">

@@ -19,6 +19,9 @@ class ThuocTinhChuDeController extends Controller
     */
     public function index(Request $request)
     {
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        }
         $id_chude = $request->id_chude ? $request->id_chude : ChuDe::first()->id;
         if($id_chude > 0){
             $items = ThuocTinhChuDe::where('id_chude', $id_chude)->paginate(20);    
@@ -35,7 +38,10 @@ class ThuocTinhChuDeController extends Controller
     * @return Response
     */
     public function create(Request $request)
-    {           
+    {          
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        } 
         $chudeList = ChuDe::all();
 
         return view('thuoc-tinh-chu-de.create', compact('chudeList'));
@@ -87,6 +93,9 @@ class ThuocTinhChuDeController extends Controller
     */
     public function edit($id)
     {   
+        if(Auth::user()->role != 3){
+            return redirect()->route('link-video.index');
+        }
         $chudeList = ChuDe::all();
         $detail = ThuocTinhChuDe::find($id);        
         return view('thuoc-tinh-chu-de.edit', compact('detail', 'chudeList'));

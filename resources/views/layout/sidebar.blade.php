@@ -16,11 +16,12 @@
     <ul class="sidebar-menu">
       <li class="header">MAIN NAVIGATION</li>     
       <li {{ in_array(\Request::route()->getName(), ['link-video.create', 'link-video.index']) ? "class=active" : "" }}>
-        <a href="{{ route('link-video.create') }}">
+        <a href="{{ route('link-video.index') }}">
           <i class="fa fa-reorder"></i> 
           <span>Link video</span>         
         </a>       
       </li>
+      @if(Auth::user()->role == 3)
       <li {{ in_array(\Request::route()->getName(), ['chu-de.index', 'chu-de.create', 'chu-de.edit']) ? "class=active" : "" }}>
         <a href="{{ route('chu-de.index') }}">
           <i class="fa fa-reorder"></i> 
@@ -39,6 +40,13 @@
           <span>Mail upload</span>         
         </a>       
       </li>
+      <li {{ in_array(\Request::route()->getName(), ['account.index', 'account.create', 'account.edit']) ? "class=active" : "" }}>
+        <a href="{{ route('account.index') }}">
+          <i class="fa fa-reorder"></i> 
+          <span>Account</span>         
+        </a>       
+      </li>
+      @endif
 
    
       <!--<li class="header">LABELS</li>
