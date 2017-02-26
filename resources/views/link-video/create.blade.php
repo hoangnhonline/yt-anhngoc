@@ -262,29 +262,27 @@ function loadView(){
       $('select.chua-chon').each(function(){
         $(this).val($('#mail_upload').val());
       });
-      var tableOffset = $("#dataTbl").offset().top;
-      var $header = $("#dataTbl > thead").clone();
-      var $fixedHeader = $("#header-fixed").append($header);
+      if($('#dataTbl').length == 1){
+        var tableOffset = $("#dataTbl").offset().top;
+        var $header = $("#dataTbl > thead").clone();
+        var $fixedHeader = $("#header-fixed").append($header);
 
-      $(window).bind("scroll", function() {
-          var offset = $(this).scrollTop();
-          
-          if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
-              $fixedHeader.show();
-          }
-          else if (offset < tableOffset) {
-              $fixedHeader.hide();
-          }
-      });
-
+        $(window).bind("scroll", function() {
+            var offset = $(this).scrollTop();
+            
+            if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
+                $fixedHeader.show();
+            }
+            else if (offset < tableOffset) {
+                $fixedHeader.hide();
+            }
+        });
+      }
       $("input[type=text]").keydown(function (e) {
         if (e.keyCode == 13) {
           return false;
         }
-      });
-      $('#buoc').change(function(){
-        loadView();
-      });
+      });     
       $('#formData').submit(function(){
         $('#btnSave').hide();
         $('#btnLoading').show();
