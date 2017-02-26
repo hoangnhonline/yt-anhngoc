@@ -104,8 +104,8 @@ class LinkVideoController extends Controller
         }
 
         Session::flash('message', 'Lưu thông tin thành công');
-
-        return redirect()->route('link-video.create', ['buoc' => $dataArr['buoc'], 'stt_fm' => $dataArr['stt_fm'], 'stt_to' => $dataArr['stt_to'], 'id_chude' => $dataArr['id_chude'], 'id_mail' => $dataArr['id_mail_select']]);
+        $id_mail_select = isset($dataArr['id_mail_select']) ? $dataArr['id_mail_select'] : "";
+        return redirect()->route('link-video.create', ['buoc' => $dataArr['buoc'], 'stt_fm' => $dataArr['stt_fm'], 'stt_to' => $dataArr['stt_to'], 'id_chude' => $dataArr['id_chude'], 'id_mail' => $id_mail_select]);
     }
     public function checkStt(Request $request){
         $stt_fm = $request->stt_fm;
