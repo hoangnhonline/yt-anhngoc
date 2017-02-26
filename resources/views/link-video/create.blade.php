@@ -1,5 +1,6 @@
 @extends('layout')
 @section('content')
+<!--email_off-->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
@@ -207,6 +208,7 @@
   </section>
   <!-- /.content -->
 </div>
+<!--/email_off-->
 <style type="text/css">
 #header-fixed { 
     position: fixed; 
