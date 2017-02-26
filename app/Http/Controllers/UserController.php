@@ -55,7 +55,7 @@ class UserController extends Controller
 
             if (Auth::attempt($dataArr)) {
              
-                return redirect()->route('link-video.create');             
+                return redirect()->route('link-video.index');             
             }
 
         }else {

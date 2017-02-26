@@ -1,3 +1,4 @@
+@if(Auth::user()->role == 3)
 <aside class="main-sidebar">
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
@@ -57,6 +58,7 @@
   </section>
   <!-- /.sidebar -->
 </aside>
+@endif
 <style type="text/css">
   .skin-blue .sidebar-menu>li>.treeview-menu{
     padding-left: 15px !important;
