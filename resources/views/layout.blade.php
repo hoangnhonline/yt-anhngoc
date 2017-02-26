@@ -101,6 +101,17 @@ $(document).ready(function(){
   });
 
  });
+$(function(){
+  $('#btnDaXem').click(function(){  
+      $.ajax({
+        url : '{{ route('update-remarks') }}',
+        type : 'POST',
+        success : function(data){    
+            $('#remarks_div').hide();
+        }
+      }); 
+  });
+});
 </script>
 <style type="text/css">
   .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover{

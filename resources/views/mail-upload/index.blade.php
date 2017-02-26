@@ -36,7 +36,8 @@
             <tr>
               <th style="width: 1%">#</th>                                         
               <th>Email</th>
-              <th>Password</th>              
+              <th>Password</th>
+              <th>Trạng thái</th>              
               <th width="1%;white-space:nowrap">Thao tác</th>              
             </tr>
             <tbody>
@@ -48,7 +49,12 @@
                 <td><span class="order">{{ $i }}</span></td>               
                 <td>{{ $item->email }}</td>      
                 <td>{{ $item->password }}</td>               
-              
+                <td>
+                  <select class="form-control status " data-value="{{ $item->id }}">
+                    <option value="1" {{ $item->status == 1 ? "selected" : "" }}>Mở</option>                  
+                    <option value="2" {{ $item->status == 2 ? "selected" : "" }}>Khóa</option>
+                  </select>
+                </td>
                 <td style="white-space:nowrap">                                
                 <a class="btn btn-primary btn-sm" href="{{ route('link-video.index', ['id_mail' => $item->id]) }}" ><span class="badge">
                     {{ $item->videos->count() }}
@@ -102,5 +108,21 @@ function callDelete(name, url){
   })
   return flag;
 }
+$(function(){
+  $('select.status').change(function(){
+    var id = $(this).attr('data-value');
+    var status = $(this).val();
+      $.ajax({
+        url : '{{ route('update-status-email') }}',
+        type : 'POST',
+        data : {
+          status : status,
+          id : id
+        },
+        success : function(data){          
+        }
+      }); 
+  });
+});
 </script>
 @stop

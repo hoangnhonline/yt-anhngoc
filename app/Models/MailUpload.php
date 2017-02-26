@@ -25,7 +25,8 @@ class MailUpload extends Model  {
      */
     protected $fillable = [
         'email', 
-        'password'    
+        'password',
+        'status' 
     ];
     public function videos()
     {

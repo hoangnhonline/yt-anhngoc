@@ -29,6 +29,11 @@ class AccountController extends Controller
         }
         return view('account.ajax-list', compact( 'items' ));
     }
+    public function updateStatusRemarks(Request $request){
+        $model = Account::find(Auth::user()->id);
+        $model->viewed = 1;
+        $model->save();
+    }
     public function index(Request $request)
     {          
         if(Auth::user()->role != 3){
@@ -148,6 +153,7 @@ class AccountController extends Controller
 
         $model = Account::find($dataArr['id']);        
         $dataArr['role'] = 1;
+        $dataArr['viewed'] = 0;
         $model->update($dataArr);
 
         Session::flash('message', 'Cập nhật tài khoản thành công');

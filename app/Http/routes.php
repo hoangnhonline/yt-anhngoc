@@ -15,6 +15,8 @@ Route::post('/', ['as' => 'check-login', 'uses' => 'UserController@checkLogin'])
 Route::get('/logout', ['as' => 'logout', 'uses' => 'UserController@logout']);
 Route::group(['middleware' => 'isAdmin'], function()
 {  
+    Route::post('/update-status-email', ['as' => 'update-status-email', 'uses' => 'MailUploadController@updateStatus']);
+    Route::post('/update-remarks', ['as' => 'update-remarks', 'uses' => 'AccountController@updateStatusRemarks']);
     Route::group(['prefix' => 'chu-de'], function () {
         Route::get('/', ['as' => 'chu-de.index', 'uses' => 'ChuDeController@index']);
         Route::get('/create', ['as' => 'chu-de.create', 'uses' => 'ChuDeController@create']);

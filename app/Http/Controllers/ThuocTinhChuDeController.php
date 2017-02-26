@@ -22,7 +22,12 @@ class ThuocTinhChuDeController extends Controller
         if(Auth::user()->role != 3){
             return redirect()->route('link-video.index');
         }
-        $id_chude = $request->id_chude ? $request->id_chude : ChuDe::first()->id;
+        $id_chude = 0;
+        if(ChuDe::first()){
+
+            $id_chude = $request->id_chude ? $request->id_chude : ChuDe::first()->id;
+            
+        }
         if($id_chude > 0){
             $items = ThuocTinhChuDe::where('id_chude', $id_chude)->paginate(20);    
         }else{

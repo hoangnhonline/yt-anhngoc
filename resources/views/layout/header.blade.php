@@ -14,6 +14,7 @@
       <span class="sr-only">Toggle navigation</span>
     </a>    
     @endif
+    
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">     
         <li class="dropdown user user-menu">
@@ -35,4 +36,9 @@
       </ul>
     </div>
   </nav>
+  @if(Auth::user()->role == 1 && Auth::user()->viewed == 0)
+  <div class="col-md-12" id="remarks_div">
+    <div class="alert alert-danger fade in alert-dismissable" style="padding-top: 5px;padding-bottom: 5px;margin-top: 5px;">{{ Auth::user()->remarks }} &nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-default" id="btnDaXem">Đã xem</button></div>
+  </div>
+  @endif
 </header>

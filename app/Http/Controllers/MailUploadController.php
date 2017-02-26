@@ -25,7 +25,13 @@ class MailUploadController extends Controller
       
         return view('mail-upload.index', compact( 'items' ));
     }
-
+    public function updateStatus(Request $request){
+        $status = $request->status;
+        $id = $request->id;
+        $model = MailUpload::find($id);
+        $model->status = $status;
+        $model->save();
+    }
     /**
     * Show the form for creating a new resource.
     *

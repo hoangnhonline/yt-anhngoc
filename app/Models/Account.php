@@ -23,5 +23,5 @@ class Account extends Model  {
      *
      * @var array
      */
-    protected $fillable = ['full_name', 'email', 'password', 'status', 'changed_password', 'remember_token', 'role', 'remarks'];
+    protected $fillable = ['full_name', 'email', 'password', 'status', 'changed_password', 'remember_token', 'role', 'remarks', 'viewed'];
 }

@@ -38,7 +38,14 @@
                 <div class="form-group">  
                   <label for="ten">Password</label>                
                   <input type="text" class="form-control"  name="password" id="password" value="{{ old('password', $detail->password) }}">
-                </div>                
+                </div>  
+                <div class="form-group">                  
+                  <select class="form-control" name="status" id="status">                                     
+                  <option value="">-- Trạng thái --</option>   
+                    <option value="1" {{ old('status', $detail->status) == 1 ? "selected" : "" }}>Mở</option>                  
+                    <option value="2" {{ old('status', $detail->status) == 2 ? "selected" : "" }}>Khóa</option>                    
+                  </select>
+                </div>              
             </div>
             <div class="box-footer">
               <button type="button" class="btn btn-default" id="btnLoading" style="display:none"><i class="fa fa-spin fa-spinner"></i></button>
