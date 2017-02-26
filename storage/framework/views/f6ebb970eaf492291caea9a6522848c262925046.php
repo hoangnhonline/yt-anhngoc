@@ -71,8 +71,8 @@
                   <table class="table table-striped table-bordered" id="dataTbl">
                     <thead>
                       <tr>
-                        <td>STT</td>
-                        <td style="width:240px">Tên</td>
+                        <td width="1%" style="text-align:center">STT</td>
+                        <td style="width:250px">Tên</td>
                         <?php if($buoc == 1): ?>
                         <?php foreach($thuocTinhList as $thuocTinh): ?>
                         <td  style="width:40px"><?php echo e($thuocTinh->ten); ?></td>     
@@ -85,7 +85,7 @@
                           Link
                           </td>
                         <?php endif; ?>
-                        <td style="width:210px">Ghi chú</td>
+                        <td>Ghi chú</td>
                       </tr>
                     </thead>
                     <tbody>
@@ -104,6 +104,7 @@
                           <input type="hidden" name="thuoctinh[<?php echo e($thuocTinh->id); ?>][]" value="0" title="<?php echo e($thuocTinh->ten); ?>">
                           </td>    
                             <?php endforeach; ?>
+                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" style="width:200px"></td>
                           <?php else: ?>
                           <td width="150px">
                           <input type="text" class="form-control" placeholder="Time" name="duration[]" value="">
@@ -111,9 +112,16 @@
                           <td width="250px">
                           <input type="text" class="form-control" placeholder="Link" name="link[]" value="">
                           </td>
-                          
+                          <td>
+                            <select class="form-control" name="id_mail[]">
+                              <option value="">-Chọn-</option>
+                              <?php foreach($mailList as $mail): ?>
+                              <option value="<?php echo e($mail->id); ?>"><?php echo e($mail->email); ?></option>
+                              <?php endforeach; ?>
+                            </select>
+                          </td>
                           <?php endif; ?>
-                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" style="width:200px"></td>
+                          
                         </tr>
                         <?php endfor; ?>
                       <?php else: ?>
@@ -124,7 +132,7 @@
                           <input type="hidden" name="id[]" value="<?php echo e(isset($dataArr[$i]) ? $dataArr[$i]->id : 0); ?> ">
                           <input type="hidden" name="stt[]" value="<?php echo e($i); ?>">
                           </td>
-                          <td><input type="text" class="form-control" placeholder="Tên" name="ten[]" style="width:230px" value="<?php echo e(isset($dataArr[$i]) ? $dataArr[$i]->name : ""); ?>"></td>
+                          <td style="width:240px"><input type="text" class="form-control" placeholder="Tên" name="ten[]" style="width:230px" value="<?php echo e(isset($dataArr[$i]) ? $dataArr[$i]->name : ""); ?>"></td>
                           <?php if($buoc == 1): ?>
                           <?php
                          $checkedArr =  isset($dataArr[$i]) ?  explode(',', $dataArr[$i]->str_id_thuoctinh) : [];
@@ -134,6 +142,7 @@
                           <input type="hidden" name="thuoctinh[<?php echo e($thuocTinh->id); ?>][]" value="<?php echo e(in_array($thuocTinh->id, $checkedArr) ? "1" : "0"); ?>" >
                           </td>    
                             <?php endforeach; ?>
+                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" value="<?php echo e(isset($dataArr[$i]) ? $dataArr[$i]->notes : ""); ?>" style="width:200px"></td>
                           <?php else: ?>
                           <td width="150px">
                           <input type="text" class="form-control" placeholder="Time" name="duration[]" value="<?php echo e(isset($dataArr[$i]) ? $dataArr[$i]->duration : ""); ?>">
@@ -141,8 +150,16 @@
                           <td width="250px">
                           <input type="text" class="form-control" placeholder="Link" name="link[]" value="<?php echo e(isset($dataArr[$i]) ? $dataArr[$i]->link : ""); ?>">
                           </td>
+                          <td>
+                            <select class="form-control" name="id_mail[]">
+                              <option value="">-Chọn-</option>
+                              <?php foreach($mailList as $mail): ?>
+                              <option value="<?php echo e($mail->id); ?>"><?php echo e($mail->email); ?></option>
+                              <?php endforeach; ?>
+                            </select>
+                          </td>
                           <?php endif; ?>
-                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" value="<?php echo e(isset($dataArr[$i]) ? $dataArr[$i]->notes : ""); ?>" style="width:200px"></td>
+                          
                         </tr>
                         <?php endfor; ?>
                       <?php endif; ?>
@@ -150,6 +167,7 @@
                       
                     </tbody>
                   </table>
+                  <table class="table table-striped table-bordered" id="header-fixed"></table>
               </div>
               <?php endif; ?>
              
@@ -173,7 +191,14 @@
   <!-- /.content -->
 </div>
 <style type="text/css">
-
+#header-fixed { 
+    position: fixed; 
+    top: 0px; display:none;
+    background-color:white;
+}
+table thead tr{
+  background-color: #CCC
+}
 </style>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('javascript_page'); ?>
@@ -213,6 +238,21 @@ function loadView(){
   location.href= "<?php echo e(route('link-video.create')); ?>?stt_fm=" + stt_fm + '&stt_to=' + stt_to + '&id_chude=' + id_chude + '&buoc=' + buoc; 
 }
     $(document).ready(function(){
+      var tableOffset = $("#dataTbl").offset().top;
+      var $header = $("#dataTbl > thead").clone();
+      var $fixedHeader = $("#header-fixed").append($header);
+
+      $(window).bind("scroll", function() {
+          var offset = $(this).scrollTop();
+          
+          if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
+              $fixedHeader.show();
+          }
+          else if (offset < tableOffset) {
+              $fixedHeader.hide();
+          }
+      });
+
       $("input[type=text]").keydown(function (e) {
         if (e.keyCode == 13) {
           return false;

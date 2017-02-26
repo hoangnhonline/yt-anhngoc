@@ -54,8 +54,9 @@ class LinkVideoController extends Controller
             $thuocTinhList = (object) [];
         }        
         $chudeList = ChuDe::all();
+        $mailList = MailUpload::all();
         $userList = Account::where('role', 1)->get();
-        return view('link-video.create', compact('chudeList', 'userList', 'stt_fm', 'stt_to', 'id_chude', 'thuocTinhList', 'dataList','str_id_thuoctinh', 'dataArr', 'buoc'));
+        return view('link-video.create', compact('chudeList', 'userList', 'stt_fm', 'stt_to', 'id_chude', 'thuocTinhList', 'dataList','str_id_thuoctinh', 'dataArr', 'buoc', 'mailList'));
     }
 
     public function store(Request $request)

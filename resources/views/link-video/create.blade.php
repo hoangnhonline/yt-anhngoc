@@ -71,8 +71,8 @@
                   <table class="table table-striped table-bordered" id="dataTbl">
                     <thead>
                       <tr>
-                        <td>STT</td>
-                        <td style="width:240px">Tên</td>
+                        <td width="1%" style="text-align:center">STT</td>
+                        <td style="width:250px">Tên</td>
                         @if($buoc == 1)
                         @foreach($thuocTinhList as $thuocTinh)
                         <td  style="width:40px">{{ $thuocTinh->ten }}</td>     
@@ -85,7 +85,7 @@
                           Link
                           </td>
                         @endif
-                        <td style="width:210px">Ghi chú</td>
+                        <td>Ghi chú</td>
                       </tr>
                     </thead>
                     <tbody>
@@ -103,6 +103,7 @@
                           <input type="hidden" name="thuoctinh[{{ $thuocTinh->id}}][]" value="0" title="{{ $thuocTinh->ten }}">
                           </td>    
                             @endforeach
+                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" style="width:200px"></td>
                           @else
                           <td width="150px">
                           <input type="text" class="form-control" placeholder="Time" name="duration[]" value="">
@@ -110,9 +111,16 @@
                           <td width="250px">
                           <input type="text" class="form-control" placeholder="Link" name="link[]" value="">
                           </td>
-                          
+                          <td>
+                            <select class="form-control" name="id_mail[]">
+                              <option value="">-Chọn-</option>
+                              @foreach($mailList as $mail)
+                              <option value="{{ $mail->id }}">{{ $mail->email }}</option>
+                              @endforeach
+                            </select>
+                          </td>
                           @endif
-                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" style="width:200px"></td>
+                          
                         </tr>
                         @endfor
                       @else
@@ -122,7 +130,7 @@
                           <input type="hidden" name="id[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->id : 0 }} ">
                           <input type="hidden" name="stt[]" value="{{ $i }}">
                           </td>
-                          <td><input type="text" class="form-control" placeholder="Tên" name="ten[]" style="width:230px" value="{{
+                          <td style="width:240px"><input type="text" class="form-control" placeholder="Tên" name="ten[]" style="width:230px" value="{{
                           isset($dataArr[$i]) ? $dataArr[$i]->name : "" }}"></td>
                           @if($buoc == 1)
                           <?php
@@ -137,6 +145,7 @@
                             }}" >
                           </td>    
                             @endforeach
+                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->notes : "" }}" style="width:200px"></td>
                           @else
                           <td width="150px">
                           <input type="text" class="form-control" placeholder="Time" name="duration[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->duration : ""}}">
@@ -144,8 +153,16 @@
                           <td width="250px">
                           <input type="text" class="form-control" placeholder="Link" name="link[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->link : "" }}">
                           </td>
+                          <td>
+                            <select class="form-control" name="id_mail[]">
+                              <option value="">-Chọn-</option>
+                              @foreach($mailList as $mail)
+                              <option value="{{ $mail->id }}">{{ $mail->email }}</option>
+                              @endforeach
+                            </select>
+                          </td>
                           @endif
-                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->notes : "" }}" style="width:200px"></td>
+                          
                         </tr>
                         @endfor
                       @endif
@@ -153,6 +170,7 @@
                       
                     </tbody>
                   </table>
+                  <table class="table table-striped table-bordered" id="header-fixed"></table>
               </div>
               @endif
              
@@ -176,7 +194,14 @@
   <!-- /.content -->
 </div>
 <style type="text/css">
-
+#header-fixed { 
+    position: fixed; 
+    top: 0px; display:none;
+    background-color:white;
+}
+table thead tr{
+  background-color: #CCC
+}
 </style>
 @stop
 @section('javascript_page')
@@ -216,6 +241,21 @@ function loadView(){
   location.href= "{{ route('link-video.create') }}?stt_fm=" + stt_fm + '&stt_to=' + stt_to + '&id_chude=' + id_chude + '&buoc=' + buoc; 
 }
     $(document).ready(function(){
+      var tableOffset = $("#dataTbl").offset().top;
+      var $header = $("#dataTbl > thead").clone();
+      var $fixedHeader = $("#header-fixed").append($header);
+
+      $(window).bind("scroll", function() {
+          var offset = $(this).scrollTop();
+          
+          if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
+              $fixedHeader.show();
+          }
+          else if (offset < tableOffset) {
+              $fixedHeader.hide();
+          }
+      });
+
       $("input[type=text]").keydown(function (e) {
         if (e.keyCode == 13) {
           return false;
