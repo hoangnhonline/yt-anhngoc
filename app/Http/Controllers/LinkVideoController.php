@@ -34,6 +34,7 @@ class LinkVideoController extends Controller
         $stt_fm = $request->stt_fm ? $request->stt_fm : '';
         $stt_to = $request->stt_to ? $request->stt_to : '';
         $id_chude = $request->id_chude ? $request->id_chude : '';
+        $id_mail = $request->id_mail ? $request->id_mail : '';
         $buoc = $request->buoc ? $request->buoc : 1;
         $dataList = (object) [];
         $dataList = LinkVideo::where('stt', '>=', $stt_fm)->where('stt', '<=', $stt_to)->get();
@@ -56,7 +57,7 @@ class LinkVideoController extends Controller
         $chudeList = ChuDe::all();
         $mailList = MailUpload::all();
         $userList = Account::where('role', 1)->get();
-        return view('link-video.create', compact('chudeList', 'userList', 'stt_fm', 'stt_to', 'id_chude', 'thuocTinhList', 'dataList','str_id_thuoctinh', 'dataArr', 'buoc', 'mailList'));
+        return view('link-video.create', compact('chudeList', 'userList', 'stt_fm', 'stt_to', 'id_chude', 'thuocTinhList', 'dataList','str_id_thuoctinh', 'dataArr', 'buoc', 'mailList', 'id_mail'));
     }
 
     public function store(Request $request)
@@ -65,7 +66,10 @@ class LinkVideoController extends Controller
         foreach($dataArr['stt'] as $key => $stt){
             $data['stt'] = $stt;
             $data['name'] = $dataArr['ten'][$key];
-            $data['notes'] = $dataArr['notes'][$key];
+
+            if(isset($dataArr['notes'])){
+                $data['notes'] = $dataArr['notes'][$key];
+            }            
             $data['id_chude'] = $dataArr['id_chude'];
             $data['created_user'] = Auth::user()->id;
             $data['updated_user'] = Auth::user()->id;
@@ -86,6 +90,9 @@ class LinkVideoController extends Controller
             if(isset($dataArr['link'])){
                 $data['link'] = $dataArr['link'][$key];
             }
+            if(isset($dataArr['id_mail'])){
+                $data['id_mail'] = $dataArr['id_mail'][$key];
+            }
             if(isset($dataArr['duration'])){
                 $data['duration'] = $dataArr['duration'][$key];
             }
@@ -98,7 +105,7 @@ class LinkVideoController extends Controller
 
         Session::flash('message', 'Lưu thông tin thành công');
 
-        return redirect()->route('link-video.create', ['buoc' => $dataArr['buoc'], 'stt_fm' => $dataArr['stt_fm'], 'stt_to' => $dataArr['stt_to'], 'id_chude' => $dataArr['id_chude']]);
+        return redirect()->route('link-video.create', ['buoc' => $dataArr['buoc'], 'stt_fm' => $dataArr['stt_fm'], 'stt_to' => $dataArr['stt_to'], 'id_chude' => $dataArr['id_chude'], 'id_mail' => $dataArr['id_mail_select']]);
     }
     public function checkStt(Request $request){
         $stt_fm = $request->stt_fm;

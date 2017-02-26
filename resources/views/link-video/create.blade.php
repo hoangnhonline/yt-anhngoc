@@ -42,15 +42,28 @@
                       <option value="2" {{ $buoc == 2 ? "selected"  : "" }}>Nhập Link</option>
                   </select>
                 </div>
-              <div class="form-group col-md-3" style="padding-left:0px">    
+                @if($buoc == 2)
+              <div class="form-group col-md-3">    
+                <label for="ten">Mail upload</label> 
+                <select name="id_mail_select" class="form-control select2" id="id_mail">
+                  <option value="">-- Chọn mail --</option>    
+                  @foreach($mailList as $mail)                
+                  <option value="{{ $mail->id }}" {{ $id_mail == $mail->id ? "selected" : "" }}>{{ $mail->email }}</option>
+                  @endforeach                    
+                </select>
+
+                
+              </div>
+              @endif
+              <div class="form-group {{ $buoc == 1 ? "col-md-3" : "col-md-2" }}" style="padding-left:0px">    
                   <label for="ten">Từ STT</label>              
                   <input type="text" class="form-control"  name="stt_fm" id="stt_fm" value="{{ $stt_fm }}">
                 </div>
-              <div class="form-group col-md-3" >    
+              <div class="form-group {{ $buoc == 1 ? "col-md-3" : "col-md-2" }}" >    
                   <label for="ten">Đến STT</label>              
                   <input type="text" class="form-control"  name="stt_to" id="stt_to" value="{{ $stt_to }}">
                 </div>  
-              <div class="form-group col-md-3" style="padding-right:0px">    
+              <div class="form-group col-md-2" style="padding-right:0px">    
                 <label for="ten">Chủ đề</label> 
                 <select name="id_chude" class="form-control select2" id="id_chude">
                   <option value="">-- Chọn chủ đề --</option>    
@@ -85,7 +98,7 @@
                           Link
                           </td>
                         @endif
-                        <td>Ghi chú</td>
+                        <td>{{ $buoc == 1 ? "Ghi chú" : "Mail upload" }}</td>
                       </tr>
                     </thead>
                     <tbody>
@@ -96,14 +109,14 @@
                           <input type="hidden" name="id[]" value="0">
                           <input type="hidden" name="stt[]" value="{{ $i }}">
                           </td>
-                          @if($buoc == 1)
                           <td><input type="text" class="form-control" placeholder="Tên" name="ten[]" style="width:230px"></td>
+                          @if($buoc == 1)                          
                            @foreach($thuocTinhList as $thuocTinh)                         
                           <td style="width:40px;text-align:center"><input type="checkbox" class="thuoc_tinh">
                           <input type="hidden" name="thuoctinh[{{ $thuocTinh->id}}][]" value="0" title="{{ $thuocTinh->ten }}">
                           </td>    
                             @endforeach
-                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" style="width:200px"></td>
+                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" ></td>
                           @else
                           <td width="150px">
                           <input type="text" class="form-control" placeholder="Time" name="duration[]" value="">
@@ -112,7 +125,7 @@
                           <input type="text" class="form-control" placeholder="Link" name="link[]" value="">
                           </td>
                           <td>
-                            <select class="form-control" name="id_mail[]">
+                            <select class="form-control {{ (isset($dataArr[$i]) && $dataArr[$i]->id_mail > 0 ) ? "da-chon"  : "chua-chon" }}" name="id_mail[]">
                               <option value="">-Chọn-</option>
                               @foreach($mailList as $mail)
                               <option value="{{ $mail->id }}">{{ $mail->email }}</option>
@@ -145,7 +158,7 @@
                             }}" >
                           </td>    
                             @endforeach
-                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->notes : "" }}" style="width:200px"></td>
+                          <td><input type="text" class="form-control" placeholder="Ghi chú" name="notes[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->notes : "" }}" ></td>
                           @else
                           <td width="150px">
                           <input type="text" class="form-control" placeholder="Time" name="duration[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->duration : ""}}">
@@ -154,10 +167,10 @@
                           <input type="text" class="form-control" placeholder="Link" name="link[]" value="{{ isset($dataArr[$i]) ? $dataArr[$i]->link : "" }}">
                           </td>
                           <td>
-                            <select class="form-control" name="id_mail[]">
+                            <select class="form-control {{ (isset($dataArr[$i]) && $dataArr[$i]->id_mail > 0 ) ? "da-chon"  : "chua-chon" }}" name="id_mail[]">
                               <option value="">-Chọn-</option>
                               @foreach($mailList as $mail)
-                              <option value="{{ $mail->id }}">{{ $mail->email }}</option>
+                              <option {{ (isset($dataArr[$i]) && $dataArr[$i]->id_mail == $mail->id ) ? "selected"  : "" }} value="{{ $mail->id }}">{{ $mail->email }}</option>
                               @endforeach
                             </select>
                           </td>
@@ -189,6 +202,7 @@
       <!--/.col (left) -->      
     </div>
     </form>
+    <input type="hidden" id="mail_upload" value="{{ $id_mail }}" />
     <!-- /.row -->
   </section>
   <!-- /.content -->
@@ -211,6 +225,10 @@ function loadView(){
   var stt_to = parseInt($('#stt_to').val());
 
   var id_chude = $('#id_chude').val();
+  var id_mail = '';
+  if($('#id_mail').val() > 0 ){
+    id_mail = $('#id_mail').val();
+  }
   var buoc = $('#buoc').val();
   
   if(stt_fm <= 0 || stt_to <= 0){
@@ -238,9 +256,12 @@ function loadView(){
     alert('Bạn chưa chọn chủ đề.'); return false;
   }
   
-  location.href= "{{ route('link-video.create') }}?stt_fm=" + stt_fm + '&stt_to=' + stt_to + '&id_chude=' + id_chude + '&buoc=' + buoc; 
+  location.href= "{{ route('link-video.create') }}?stt_fm=" + stt_fm + '&stt_to=' + stt_to + '&id_chude=' + id_chude + '&buoc=' + buoc + '&id_mail=' + id_mail; 
 }
     $(document).ready(function(){
+      $('select.chua-chon').each(function(){
+        $(this).val($('#mail_upload').val());
+      });
       var tableOffset = $("#dataTbl").offset().top;
       var $header = $("#dataTbl > thead").clone();
       var $fixedHeader = $("#header-fixed").append($header);
